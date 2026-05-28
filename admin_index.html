@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard System - Pro Version</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --primary: #2c3e50;
+    --secondary: #34495e;
+    --accent: #3498db;
+    --danger: #e74c3c;
+    --success: #27ae60;
+    --warning: #f1c40f;
+    --bg: #f4f6f9;
+    --white: #ffffff;
+    --border: #e0e0e0;
+    --text: #333;
+    --light-gray: #f8f9fa;
+    --soft-primary: #ecf0f1;
+  }
+
+  * {
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* ===================== SIDEBAR ===================== */
+  #sidebar {
+    width: 250px;
+    background: var(--primary);
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+  }
+
+  #sidebar h3 {
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+    background: rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  #sidebar .menu-group {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+  #sidebar button {
+    width: 100%;
+    margin: 4px 0;
+    padding: 12px 15px;
+    border: none;
+    background: transparent;
+    color: #bdc3c7;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+
+  #sidebar button:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    transform: translateX(5px);
+  }
+
+  #sidebar button.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  }
+
+  #sidebar button i {
+    width: 20px;
+    text-align: center;
+  }
+
+  /* ===================== MAIN CONTENT ===================== */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* ===================== CONTENT AREA ===================== */
+  #content {
+    padding: 30px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .form-box {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .form-box h3,
+  .form-box h4 {
+    margin-top: 0;
+    color: var(--primary);
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  /* ===================== TABLES ===================== */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+
+  th, td {
+    padding: 16px 18px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  th {
+    background: #f8f9fa;
+    color: #555;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.8px;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s ease;
+  }
+
+  tbody tr:hover {
+    background-color: #f9fbfc;
+  }
+
+  /* ===================== INPUTS & BUTTONS ===================== */
+  input, select, textarea {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    outline: none;
+    font-size: 14px;
+    width: auto;
+    max-width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  button.btn-main,
+  button.btn-danger,
+  button.btn-warn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-main {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-main:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .btn-danger {
+    background: #fff0f0;
+    color: var(--danger);
+    border: 1px solid #f5b7b1;
+  }
+
+  .btn-danger:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+  }
+
+  .btn-warn {
+    background: #fff9db;
+    color: #d35400;
+    border: 1px solid #fdebd0;
+  }
+
+  .btn-warn:hover {
+    background: #f39c12;
+    color: white;
+  }
+
+  /* ===================== STATUS BADGES ===================== */
+  .badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .st-pending {
+    background: #fef3cd;
+    color: #856404;
+  }
+
+  .st-confirmed {
+    background: #cfe2ff;
+    color: #084298;
+  }
+
+  .st-shipped {
+    background: #cff4fc;
+    color: #055160;
+  }
+
+  .st-delivered {
+    background: #d1e7dd;
+    color: #0a3622;
+  }
+
+  .st-received {
+    background: #d1e7dd;
+    color: #0a3622;
+  }
+
+  .st-return {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+
+  .st-cancelled {
+    background: #f8d7da;
+    color: #842029;
+  }
+
+  /* ===================== CHAT BOX ===================== */
+  #chatBoxContent {
+    border-radius: 8px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid var(--border);
+  }
+
+  .msg-row {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+  }
+
+  .msg-admin {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+
+  .msg-user {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+  }
+
+  .bubble-admin {
+    background: var(--accent);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .bubble-user {
+    background: #e4e6eb;
+    color: #050505;
+    border-bottom-left-radius: 4px;
+  }
+
+  /* ===================== TOAST NOTIFICATION ===================== */
+  #toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  #toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+
+  /* ===================== UTILITIES ===================== */
+  .text-green {
+    color: var(--success);
+    font-weight: bold;
+  }
+
+  .price {
+    color: var(--danger);
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ===================== DETAIL BOX STYLING ===================== */
+  .detail-box {
+    background: var(--light-gray);
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .detail-box p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .detail-box strong {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* ===================== ORDER ITEMS TABLE ===================== */
+  .order-items-table {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1024px) {
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #sidebar {
+      width: 200px;
+    }
+
+    #content {
+      padding: 15px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      font-size: 12px;
+    }
+
+    header {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-group {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h3>ADMIN PRO</h3>
+  <div class="menu-group">
+    <button onclick="nav(this, showLogin)">🔐 Auth / Login</button>
+    <button onclick="nav(this, loadUsers)">👥 Quản lý Users</button>
+    <button onclick="nav(this, loadCategories)">📂 Danh mục</button>
+    <button onclick="nav(this, loadProducts)">📦 Sản phẩm & Kho</button>
+    <button onclick="nav(this, loadInventory)">🏭 Nhật ký Kho</button>
+    <button onclick="nav(this, activeMenu)">🛒 Đơn hàng (Quy trình)</button>
+    <button onclick="nav(this, showChatBox)">💬 Chat Support</button>
+    <button onclick="nav(this, loadReports)">📊 Báo cáo Doanh số</button>
+  </div>
+  <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.1)">
+    <button onclick="logout()" style="color: #ff7675; border: 1px solid rgba(255,118,117,0.3);">🚪 Đăng xuất</button>
+  </div>
+</div>
+
+<div id="main">
+  <header>
+    <h2 id="title">Dashboard</h2>
+    <div style="display:flex; align-items:center; gap:15px">
+      <span id="userInfo" style="font-size: 14px;"></span>
+    </div>
+  </header>
+  <div id="content">
+    <div class="form-box">
+      <h3>Chào mừng quay trở lại!</h3>
+      <p>Hệ thống đã sẵn sàng. Vui lòng chọn menu bên trái.</p>
+    </div>
+  </div>
+  <div id="toast">Thông báo</div>
+</div>
+
+<script>
+// --- 1. CONFIG & GLOBALS ---
+const API_URL = "http://127.0.0.1:8002/api/v1";
+let token = localStorage.getItem("token") || "";
+let wsAdmin = null;
+let currentChatUserId = null;
+let userCache = {}; // Cache lưu trữ { user_id: { username, email } }
+
+// --- 2. UTILS & HELPERS ---
+function showToast(msg, isError = false) {
+  const x = document.getElementById("toast");
+  x.innerText = msg;
+  x.style.backgroundColor = isError ? "#e74c3c" : "#333";
+  x.className = "show";
+  setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+async function callAPI(endpoint, method = "GET", body = null) {
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = "Bearer " + token;
+
+  try {
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+    const res = await fetch(`${API_URL}/${cleanEndpoint}`, opts);
+
+    if (res.status === 401) { logout(); throw new Error("Unauthorized"); }
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || "Lỗi thao tác");
+    }
+    return await res.json();
+  } catch (e) {
+    throw e;
+  }
+}
+
+function formatVND(n) {
+  return (n || 0).toLocaleString("vi-VN") + " đ";
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleString("vi-VN");
+}
+
+function setTitle(t) {
+  document.getElementById("title").innerText = t;
+}
+
+function setContent(h) {
+  document.getElementById("content").innerHTML = h;
+}
+
+function nav(btn, callback) {
+  document.querySelectorAll('#sidebar button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  callback();
+}
+
+function logout() {
+  token = "";
+  localStorage.removeItem("token");
+  if (wsAdmin) wsAdmin.close();
+  showToast("Đã đăng xuất");
+  showLogin();
+}
+
+// Hàm activeMenu để tương thích với logic cũ
+function activeMenu(menuName) {
+  loadOrders();
+}
+
+// Auto Init
+window.onload = function() {
+  if (token) {
+    document.getElementById("userInfo").innerHTML = `<span class="badge st-received">Admin Online</span>`;
+    connectAdminWS();
+    loadOrders();
+  } else {
+    showLogin();
+  }
+};
+
+// --- 3. AUTH ---
+function showLogin() {
+  setTitle("Đăng nhập Hệ thống");
+  setContent(`
+    <div class="form-box" style="max-width: 400px; margin: 80px auto; text-align:center;">
+      <h3>QUẢN TRỊ VIÊN</h3>
+      <div class="flex-col">
+        <input id="lgUser" placeholder="Tên đăng nhập / Email">
+        <input id="lgPass" type="password" placeholder="Mật khẩu">
+        <button onclick="doLogin()" class="btn-main" style="padding:15px; font-size:16px; margin-top:10px">ĐĂNG NHẬP</button>
+      </div>
+    </div>
+  `);
+}
+
+async function doLogin() {
+  try {
+    const res = await fetch(API_URL + "/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username_or_email: document.getElementById("lgUser").value,
+        password: document.getElementById("lgPass").value
+      })
+    });
+    const data = await res.json();
+    if (data.access_token) {
+      token = data.access_token;
+      localStorage.setItem("token", token);
+      showToast("Đăng nhập thành công!");
+      location.reload();
+    } else {
+      showToast(data.detail || "Sai thông tin", true);
+    }
+  } catch (e) {
+    showToast("Lỗi kết nối Server", true);
+  }
+}
+
+// --- 4. USERS ---
+async function loadUsers() {
+  setTitle("Quản lý Người dùng");
+  try {
+    const d = await callAPI("/users/");
+    setContent(`
+    <div class="form-box">
+      <table>
+        <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Vai trò</th><th>Hành động</th></tr></thead>
+        <tbody>
+          ${d.map(u => `
+            <tr>
+              <td>${u.id}</td>
+              <td>${u.username}</td>
+              <td>${u.email || "---"}</td>
+              <td>
+                <select id="ur${u.id}" onchange="updUser(${u.id})">
+                  <option value="user" ${u.role == "user" ? "selected" : ""}>User</option>
+                  <option value="manager" ${u.role == "manager" ? "selected" : ""}>Manager</option>
+                  <option value="admin" ${u.role == "admin" ? "selected" : ""}>Admin</option>
+                </select>
+              </td>
+              <td><button onclick="delUser(${u.id})" class="btn-danger">Xóa User</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`);
+  } catch (e) { }
+}
+
+async function updUser(id) {
+  const role = document.getElementById("ur" + id).value;
+  showToast(`Đang cập nhật quyền cho User #${id} thành ${role}...`);
+}
+
+async function delUser(id) {
+  if (confirm("Xóa vĩnh viễn user này?")) {
+    await callAPI(`/users/${id}`, "DELETE");
+    showToast("Đã xóa user");
+    loadUsers();
+  }
+}
+
+// --- 5. CATEGORIES ---
+async function loadCategories() {
+  setTitle("Danh mục Sản phẩm");
+  const d = await callAPI("/categories/");
+  setContent(`
+  <div class="grid-2">
+    <div class="form-box">
+      <h4>Thêm danh mục mới</h4>
+      <div style="display:flex; gap:10px">
+        <input id="catName" placeholder="Tên danh mục..." style="flex:1">
+        <button onclick="addCat()" class="btn-main">Tạo mới</button>
+      </div>
+    </div>
+    <div class="form-box">
+      <h4>Danh sách hiện có</h4>
+      <table>
+        <thead><tr><th>ID</th><th>Tên danh mục</th><th>Thao tác</th></tr></thead>
+        <tbody>
+          ${d.map(c => `<tr><td>${c.id}</td><td><input id="cn${c.id}" value="${c.name}"></td><td><div class="btn-group"><button onclick="updCat(${c.id})" class="btn-main">Lưu</button><button onclick="delCat(${c.id})" class="btn-danger">Xóa</button></div></td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>`);
+}
+
+async function addCat() {
+  const name = document.getElementById("catName").value;
+  if (!name) return showToast("Nhập tên danh mục", true);
+  await callAPI("/categories/", "POST", { name });
+  showToast("Thêm danh mục thành công");
+  loadCategories();
+}
+
+async function updCat(id) {
+  await callAPI(`/categories/${id}`, "PUT", { name: document.getElementById("cn" + id).value });
+  showToast("Cập nhật thành công");
+}
+
+async function delCat(id) {
+  if (confirm("Xóa danh mục này?")) {
+    await callAPI(`/categories/${id}`, "DELETE");
+    loadCategories();
+  }
+}
+
+// --- 6. PRODUCTS & VARIANTS ---
+async function loadProducts() {
+  setTitle("Kho hàng tổng hợp");
+  const d = await callAPI("/products/");
+
+  setContent(`
+  <div class="form-box">
+    <h3>➕ Thêm sản phẩm mới</h3>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+      <input id="pname" placeholder="Tên sản phẩm" style="width:200px">
+      <input id="pprice" type="number" placeholder="Giá" style="width:150px">
+      <input id="pdesc" placeholder="Mô tả" style="flex:1">
+      <button onclick="addProduct()" class="btn-main">Thêm</button>
+    </div>
+  </div>
+
+  <div class="form-box">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên sản phẩm</th>
+          <th>Giá niêm yết</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${d.map(p => `
+          <tr>
+            <td>${p.id}</td>
+            <td>
+              <strong>${p.name}</strong><br>
+              <small>${p.description || ""}</small>
+            </td>
+            <td class="price">${formatVND(p.price)}</td>
+            <td>
+              <div class="btn-group">
+                <button onclick="loadVariants(${p.id}, '${p.name}')" class="btn-main">📦 Biến thể & Kho</button>
+                <button onclick="delProduct(${p.id})" class="btn-danger">Xóa</button>
+              </div>
+            </td>
+          </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="variantSection"></div>
+  `);
+}
+
+async function addProduct() {
+  const name = document.getElementById("pname").value.trim();
+  const price = document.getElementById("pprice").value;
+  const description = document.getElementById("pdesc").value.trim();
+  const category_id = 1;
+
+  if (!name || !price || !description) {
+    return showToast("Nhập đầy đủ thông tin!", true);
+  }
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("price", Number(price));
+  formData.append("description", description);
+  formData.append("category_id", category_id);
+
+  try {
+    const res = await fetch(API_URL + "/products/", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      console.error(err);
+      throw new Error(err.detail || "Lỗi tạo sản phẩm");
+    }
+
+    showToast("✅ Thêm sản phẩm thành công");
+
+    document.getElementById("pname").value = "";
+    document.getElementById("pprice").value = "";
+    document.getElementById("pdesc").value = "";
+
+    loadProducts();
+  } catch (e) {
+    showToast("❌ " + e.message, true);
+  }
+}
+
+async function delProduct(id) {
+  if (confirm("Xóa sản phẩm này và toàn bộ biến thể?")) {
+    await callAPI(`/products/${id}`, "DELETE");
+    loadProducts();
+  }
+}
+
+async function loadVariants(pid, pname) {
+  const d = await callAPI(`/products/${pid}/variants`);
+  const html = `
+  <div class="form-box" style="border: 2px solid var(--accent)">
+    <h4>Quản lý biến thể: <span style="color:var(--accent)">${pname}</span> (ID: ${pid})</h4>
+
+    <div style="background:#f1f2f6; padding:15px; border-radius:8px; margin-bottom:15px; display:flex; gap:10px; align-items:center">
+      <b>Thêm mới:</b>
+      <input id="vs" placeholder="Size (S, M...)" style="width:100px">
+      <input id="vc" placeholder="Màu sắc" style="width:120px">
+      <input id="vst" type="number" placeholder="Số lượng" style="width:100px">
+      <button onclick="addVariant(${pid}, '${pname}')" class="btn-main">+ Thêm</button>
+    </div>
+
+    <table>
+      <thead><tr><th>ID Biến thể</th><th>Kích cỡ</th><th>Màu sắc</th><th>Tồn kho thực tế</th><th>Thao tác</th></tr></thead>
+      <tbody>
+        ${d.map(v => `
+          <tr>
+            <td>#${v.id}</td>
+            <td>${v.size}</td>
+            <td><span style="display:inline-block; width:10px; height:10px; background:${v.color}; border:1px solid #ccc; margin-right:5px"></span>${v.color}</td>
+            <td><b style="color:${v.stock < 10 ? 'red' : 'green'}">${v.stock}</b></td>
+            <td><button onclick="delVariant(${v.id}, ${pid}, '${pname}')" class="btn-danger">Xóa</button></td>
+          </tr>`).join("")}
+      </tbody>
+    </table>
+    <div style="margin-top:10px; text-align:right"><button onclick="document.getElementById('variantSection').innerHTML=''" class="btn-warn">Đóng chi tiết</button></div>
+  </div>`;
+  document.getElementById("variantSection").innerHTML = html;
+  document.getElementById("variantSection").scrollIntoView({ behavior: "smooth" });
+}
+
+async function addVariant(pid, pname) {
+  const s = document.getElementById("vs").value,
+        c = document.getElementById("vc").value,
+        st = document.getElementById("vst").value;
+  if (!s || !c) return showToast("Nhập đủ Size/Màu", true);
+  await callAPI(`/products/${pid}/variants`, "POST", { size: s, color: c, stock: Number(st) });
+  showToast("Đã thêm biến thể");
+  loadVariants(pid, pname);
+}
+
+async function delVariant(vid, pid, pname) {
+  if (confirm("Xóa biến thể này?")) {
+    await callAPI(`/variants/${vid}`, "DELETE");
+    loadVariants(pid, pname);
+  }
+}
+
+// --- 7. INVENTORY LOGS ---
+async function loadInventory() {
+  setTitle("Nhật ký Kho & Điều chỉnh");
+  const d = await callAPI("/inventory/");
+  setContent(`
+  <div class="grid-2">
+    <div class="form-box">
+      <h4>⚡ Nhập/Xuất Kho Thủ Công</h4>
+      <div class="flex-col">
+        <input id="iv" placeholder="Nhập ID Biến thể (Variant ID)">
+        <input id="iq" type="number" placeholder="Số lượng (Ví dụ: 10)">
+        <input id="inote" placeholder="Lý do (Nhập hàng về, Xuất hủy...)">
+        <div style="display:flex; gap:10px">
+          <button onclick="invAction('import')" class="btn-main" style="background:var(--success); flex:1">NHẬP KHO (+)</button>
+          <button onclick="invAction('export')" class="btn-main" style="background:var(--danger); flex:1">XUẤT KHO (-)</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-box" style="overflow-y:auto; max-height:400px">
+      <h4>📜 Lịch sử gần nhất</h4>
+      <table>
+        <thead><tr><th>Ngày</th><th>Biến thể</th><th>SL</th><th>Loại</th></tr></thead>
+        <tbody>
+          ${d.map(i => `<tr><td><small>${formatDate(i.created_at)}</small></td><td>#${i.product_variant_id}</td><td><b>${i.stock}</b></td><td><span class="badge ${i.type == 'IN' ? 'st-received' : 'st-cancelled'}">${i.type}</span></td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>`);
+}
+
+async function invAction(type) {
+  const vid = document.getElementById("iv").value,
+        qty = document.getElementById("iq").value;
+  if (!vid || !qty) return showToast("Vui lòng nhập ID và Số lượng", true);
+
+  await callAPI(`/inventory/${type}/${vid}`, "POST", {
+    stock: Number(qty),
+    type: type === 'import' ? "IN" : "OUT",
+    note: document.getElementById("inote").value
+  });
+  showToast("Thao tác kho thành công!");
+  loadInventory();
+}
+
+// --- 8. ORDERS (LOGIC TỐI ƯU) ---
+const STATUS_MAP = {
+  pending: { label: "Chờ duyệt", class: "st-pending" },
+  confirmed: { label: "Đã xác nhận", class: "st-confirmed" },
+  shipped: { label: "Đang giao hàng", class: "st-shipped" },
+  delivered: { label: "Đã giao thành công", class: "st-delivered" },
+  received: { label: "Khách đã nhận", class: "st-received" },
+  return_requested: { label: "Yêu cầu trả hàng", class: "st-return" },
+  refunded: { label: "Đã hoàn tiền", class: "st-return" },
+  cancelled: { label: "Đã hủy", class: "st-cancelled" }
+};
+
+const NEXT_ACTIONS = {
+  pending: ['confirmed', 'cancelled'],
+  confirmed: ['shipped', 'cancelled'],
+  shipped: ['delivered', 'cancelled'],
+  delivered: ['received', 'return_requested'],
+  return_requested: ['refunded', 'delivered'],
+  received: [],
+  refunded: [],
+  cancelled: []
+};
+
+// Hàm khởi tạo cache người dùng
+async function initUserCache() {
+  try {
+    const users = await callAPI("/users/");
+    userCache = {};
+    users.forEach(u => {
+      userCache[u.id] = {
+        username: u.username,
+        email: u.email || ""
+      };
+    });
+    console.log("✅ User Cache loaded:", userCache);
+  } catch (e) {
+    console.warn("⚠️ Không thể tải danh sách người dùng (API /users/ lỗi hoặc 403):", e.message);
+    userCache = {};
+  }
+}
+
+// Hàm lấy tên người dùng từ cache
+function getUserName(userId) {
+  if (userCache[userId]) {
+    return `${userCache[userId].username} (ID: ${userId})`;
+  }
+  return `Tài khoản #${userId}`;
+}
+
+// Hàm tải danh sách đơn hàng
+async function loadOrders() {
+  setTitle("Quản lý Đơn hàng");
+
+  // Khởi tạo cache người dùng
+  await initUserCache();
+
+  try {
+    const response = await callAPI("/orders/");
+
+    // Bóc tách mảng items an toàn
+    let orders = [];
+    if (Array.isArray(response)) {
+      orders = response;
+    } else if (response && Array.isArray(response.items)) {
+      orders = response.items;
+    } else if (response && typeof response === 'object') {
+      console.warn("⚠️ Cấu trúc response không nhận dạng, tìm mảng đơn hàng...", response);
+      orders = [];
+    }
+
+    // Sắp xếp đơn hàng mới nhất lên đầu
+    orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    setContent(`
+      <div class="form-box">
+        <h3 style="margin-bottom: 20px;">📋 Danh sách Đơn hàng</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Ngày đặt</th>
+              <th style="text-align: right;">Tổng tiền</th>
+              <th style="text-align: center;">Trạng thái</th>
+              <th>Xử lý tiếp theo</th>
+              <th style="text-align: center;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders.map(o => {
+              const currentSt = o.status;
+              const validNextMoves = NEXT_ACTIONS[currentSt] || [];
+              const customerName = getUserName(o.user_id);
+
+              let actionHTML = '';
+              if (validNextMoves.length > 0) {
+                actionHTML = `
+                <div style="display:flex; gap:5px">
+                  <select id="nextSt-${o.id}" style="padding:6px 8px; width:140px; font-size:13px;">
+                    <option value="">-- Chọn --</option>
+                    ${validNextMoves.map(s => `<option value="${s}">${STATUS_MAP[s].label}</option>`).join("")}
+                  </select>
+                  <button onclick="changeStatus(${o.id})" class="btn-main" style="padding:6px 10px; font-size:12px;">OK</button>
+                </div>`;
+              } else {
+                actionHTML = '<span style="color:#aaa; font-style:italic;">Hoàn tất</span>';
+              }
+
+              return `
+              <tr>
+                <td><b style="color:var(--primary)">#${o.id}</b></td>
+                <td>${customerName}</td>
+                <td><small>${formatDate(o.created_at)}</small></td>
+                <td style="text-align: right;" class="price">${formatVND(o.total_amount)}</td>
+                <td style="text-align: center;"><span class="badge ${STATUS_MAP[currentSt]?.class || ''}">${STATUS_MAP[currentSt]?.label || currentSt}</span></td>
+                <td>${actionHTML}</td>
+                <td style="text-align: center;">
+                  <button onclick="viewOrderDetail(${o.id})" class="btn-main" style="padding:6px 12px; font-size:12px; background:var(--secondary);">👁️ Chi tiết</button>
+                </td>
+              </tr>`;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="orderDetailSection"></div>
+    `);
+  } catch (e) {
+    console.error(e);
+    showToast("Không thể tải danh sách đơn hàng", true);
+  }
+}
+
+// Hàm xem chi tiết đơn hàng
+async function viewOrderDetail(orderId) {
+  const container = document.getElementById("orderDetailSection");
+  container.innerHTML = "<div class='form-box' style='text-align:center; padding:20px;'>⏳ Đang truy vấn dữ liệu đơn hàng...</div>";
+  container.scrollIntoView({ behavior: "smooth" });
+
+  try {
+    const order = await callAPI(`/orders/${orderId}`);
+
+    // Bóc tách danh sách sản phẩm an toàn
+    let items = [];
+    if (Array.isArray(order.items)) {
+      items = order.items;
+    } else if (Array.isArray(order.order_items)) {
+      items = order.order_items;
+    }
+
+    let itemsHTML = '';
+    if (items.length === 0) {
+      itemsHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">Không có thông tin sản phẩm chi tiết</td></tr>`;
+    } else {
+      itemsHTML = items.map(item => `
+        <tr>
+          <td><b>#${item.product_variant_id || item.variant_id || '---'}</b></td>
+          <td>${item.product_name || 'Sản phẩm'}</td>
+          <td>${item.size || '---'}</td>
+          <td>${item.color || '---'}</td>
+          <td style="text-align: center;"><b>${item.quantity || 0}</b></td>
+          <td class="price">${formatVND(item.price || 0)}</td>
+        </tr>
+      `).join("");
+    }
+
+    const customerName = getUserName(order.user_id);
+
+    const detailHTML = `
+    <div class="form-box" style="border: 2px solid var(--accent); margin-top: 25px; animation: slideIn 0.3s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h3 style="margin:0;">📄 Chi tiết Đơn hàng #${order.id}</h3>
+        <button onclick="document.getElementById('orderDetailSection').innerHTML=''" class="btn-warn" style="padding:6px 12px;">❌ Đóng</button>
+      </div>
+
+      <!-- Thông tin khách hàng và đơn hàng (2 cột) -->
+      <div class="grid-2" style="margin-bottom: 25px;">
+        <div class="detail-box">
+          <h4 style="margin-top:0; color:var(--primary); margin-bottom:15px;">👤 Thông Tin Khách Hàng</h4>
+          <p><strong>Tên khách hàng:</strong> ${order.full_name || customerName}</p>
+          <p><strong>Email liên hệ:</strong> ${order.email || 'Không có email'}</p>
+          <p><strong>Số điện thoại:</strong> <b style="color:var(--primary)">${order.phone_number || order.telephone || 'Chưa cung cấp'}</b></p>
+          <p><strong>Địa chỉ giao hàng:</strong> <span style="color:#2980b9; font-weight:500;">${order.shipping_address || order.address || 'Trống'}</span></p>
+        </div>
+
+        <div class="detail-box" style="border-left-color: var(--warning);">
+          <h4 style="margin-top:0; color:var(--primary); margin-bottom:15px;">📊 Thông Tin Đơn Hàng</h4>
+          <p><strong>Thời gian đặt:</strong> ${formatDate(order.created_at)}</p>
+          <p><strong>Trạng thái:</strong> <span class="badge ${STATUS_MAP[order.status]?.class || ''}">${STATUS_MAP[order.status]?.label || order.status}</span></p>
+          <p><strong>Phương thức thanh toán:</strong> ${order.payment_method || 'Không xác định'}</p>
+          <p><strong>Trạng thái thanh toán:</strong> <span class="badge st-received">${order.payment_status || 'Chưa xác định'}</span></p>
+          <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;"><strong>Tổng thanh toán:</strong> <span class="price" style="font-size:18px;">${formatVND(order.total_amount)}</span></p>
+        </div>
+      </div>
+
+      <!-- Danh sách sản phẩm -->
+      <h4 style="color:var(--primary); margin-bottom:15px;">📦 Chi tiết Kiện Hàng</h4>
+      <div class="order-items-table">
+        <table style="margin:0;">
+          <thead>
+            <tr style="background:#f8f9fa;">
+              <th>Mã Biến thể</th>
+              <th>Tên sản phẩm</th>
+              <th>Size</th>
+              <th>Color</th>
+              <th style="text-align:center;">Số lượng</th>
+              <th>Đơn giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHTML}
+          </tbody>
+        </table>
+      </div>
+
+      ${order.note ? `
+        <div style="margin-top: 20px; padding: 15px; background: #fffbea; border-radius: 8px; border-left: 4px solid var(--warning);">
+          <strong style="color:var(--primary);">📝 Ghi chú từ khách:</strong>
+          <p style="margin: 8px 0; color:#555;">${order.note}</p>
+        </div>
+      ` : ''}
+    </div>`;
+
+    container.innerHTML = detailHTML;
+  } catch (e) {
+    console.error("Lỗi truy vấn:", e);
+    container.innerHTML = `
+    <div class="form-box" style="border: 1px solid var(--danger); text-align:center; padding:20px;">
+      <b style="color:var(--danger)">❌ Không thể lấy chi tiết đơn hàng!</b><br>
+      <small>Lỗi: ${e.message}</small>
+    </div>`;
+  }
+}
+
+// Hàm thay đổi trạng thái đơn hàng
+async function changeStatus(orderId) {
+  const select = document.getElementById(`nextSt-${orderId}`);
+  const newStatus = select.value;
+  if (!newStatus) return;
+
+  if (confirm(`Xác nhận chuyển đơn #${orderId} sang trạng thái: ${STATUS_MAP[newStatus].label}?`)) {
+    await callAPI(`/orders/${orderId}/status?status=${newStatus}`, "PUT");
+    showToast("Cập nhật trạng thái thành công");
+    loadOrders();
+  }
+}
+
+// --- 9. REPORTS ---
+async function loadReports() {
+  setTitle("Báo cáo Doanh số");
+  setContent(`
+  <div class="grid-2">
+    <div class="form-box">
+      <h4>📈 Doanh thu theo thời gian</h4>
+      <div style="margin-bottom:15px">
+        <button onclick="renderSales('day')" class="btn-main">Theo Ngày</button>
+        <button onclick="renderSales('month')" class="btn-main" style="background:var(--secondary)">Theo Tháng</button>
+      </div>
+      <div id="salesData">Đang tải...</div>
+    </div>
+    <div class="form-box">
+      <h4>🔥 Top 10 Sản phẩm bán chạy (Năm nay)</h4>
+      <div id="topData">Đang tải...</div>
+    </div>
+  </div>`);
+  renderSales('day');
+  renderTop();
+}
+
+async function renderSales(period) {
+  const d = await callAPI(`/reports/sales?period=${period}`);
+  document.getElementById("salesData").innerHTML = `
+  <table style="border:none">
+    <tr style="background:#eee"><th>Thời gian</th><th>Đơn hàng</th><th>Doanh thu</th></tr>
+    ${d.map(x => `<tr><td>${x.period}</td><td style="text-align:center">${x.total_orders}</td><td class="text-green">${formatVND(x.total_sales)}</td></tr>`).join("")}
+  </table>`;
+}
+
+async function renderTop() {
+  const d = await callAPI(`/reports/top-selling?time_frame=year&limit=10`);
+  document.getElementById("topData").innerHTML = `
+  <table style="border:none">
+    <tr style="background:#eee"><th>Variant ID</th><th>Số lượng bán</th></tr>
+    ${d.map(x => `<tr><td>#${x.variant_id}</td><td><b>${x.total_quantity_sold}</b></td></tr>`).join("")}
+  </table>`;
+}
+
+// --- 10. CHAT SYSTEM ---
+
+function connectAdminWS() {
+  if (!token) return;
+  if (wsAdmin) wsAdmin.close();
+
+  wsAdmin = new WebSocket(`ws://127.0.0.1:8001/api/v1/chat/ws?token=${token}`);
+
+  wsAdmin.onopen = () => console.log("✅ Admin WS Connected");
+
+  wsAdmin.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      const fromId = Number(data.from);
+
+      if (currentChatUserId && Number(currentChatUserId) === fromId) {
+        appendMsgToUI(data.content, false, new Date().toLocaleTimeString());
+      } else {
+        showToast(`📩 Tin nhắn mới từ ${data.from_name}: ${data.content}`);
+        loadChatUsers();
+      }
+    } catch (e) {
+      console.error("WS Error:", e);
+    }
+  };
+
+  wsAdmin.onclose = () => {
+    console.log("❌ Admin WS Disconnected. Reconnecting...");
+    setTimeout(connectAdminWS, 3000);
+  };
+}
+
+function showChatBox() {
+  setTitle("Hỗ trợ trực tuyến (Live Chat)");
+  setContent(`
+    <div style="display:grid; grid-template-columns: 280px 1fr; gap:20px; height: calc(100vh - 180px);">
+      <div class="form-box" style="display:flex; flex-direction:column; padding:0; overflow:hidden">
+        <div style="padding:15px; background:#f8f9fa; border-bottom:1px solid #eee; font-weight:bold">Hội thoại</div>
+        <div id="chatUserList" style="flex:1; overflow-y:auto;">Đang tải...</div>
+      </div>
+
+      <div class="form-box" style="display:flex; flex-direction:column; padding:0; overflow:hidden">
+        <div id="chatHeader" style="padding:15px; background:var(--primary); color:white; font-weight:bold">
+          Chọn người dùng để bắt đầu chat
+        </div>
+        <div id="chatBoxContent" style="flex:1; overflow-y:auto; padding:20px; background:#fff"></div>
+        <div style="padding:15px; background:#f1f2f6; border-top:1px solid #ddd; display:flex; gap:10px">
+          <input id="chatMsg" placeholder="Nhập tin nhắn..." style="flex:1" onkeypress="if(event.key==='Enter') sendChat()">
+          <button onclick="sendChat()" class="btn-main">GỬI 🚀</button>
+        </div>
+      </div>
+    </div>
+  `);
+  loadChatUsers();
+}
+
+async function loadChatUsers() {
+  try {
+    const users = await callAPI("/chat/admin/conversations");
+    const list = document.getElementById("chatUserList");
+    if (!list) return;
+
+    list.innerHTML = users.map(u => `
+      <div onclick="selectChatUser(${u.id},'${u.username}')"
+           class="user-item"
+           style="padding:15px; border-bottom:1px solid #f1f1f1; cursor:pointer; background:${currentChatUserId === u.id ? '#e3f2fd' : 'white'}">
+        <div style="font-weight:bold">${u.username}</div>
+        <small>ID: ${u.id}</small>
+      </div>
+    `).join("");
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function selectChatUser(id, name) {
+  currentChatUserId = id;
+  document.getElementById("chatHeader").innerText = `Đang chat với: ${name}`;
+  document.getElementById("chatHeader").style.background = "var(--accent)";
+
+  loadChatUsers();
+  loadChatMessages();
+}
+
+async function loadChatMessages() {
+  if (!currentChatUserId) return;
+  const box = document.getElementById("chatBoxContent");
+  box.innerHTML = "<div style='text-align:center; padding:20px;'>Đang tải lịch sử...</div>";
+
+  try {
+    const endpoint = `/chat/history/${currentChatUserId}`;
+    console.log("Đang gọi API:", API_URL + endpoint);
+
+    const msgs = await callAPI(endpoint);
+
+    box.innerHTML = "";
+    if (!msgs || msgs.length === 0) {
+      box.innerHTML = "<div style='text-align:center; color:#999; margin-top:20px;'>Chưa có lịch sử trò chuyện.</div>";
+      return;
+    }
+
+    msgs.sort((a, b) => a.id - b.id);
+
+    msgs.forEach(m => {
+      const isMe = (Number(m.sender_id) !== Number(currentChatUserId));
+      const time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      appendMsgToUI(m.content, isMe, time);
+    });
+
+    box.scrollTop = box.scrollHeight;
+  } catch (e) {
+    console.error("Lỗi chi tiết:", e);
+    box.innerHTML = `<div style='color:var(--danger); text-align:center; padding:20px;'>
+      Lỗi: ${e.message}<br>
+      <small>Hãy kiểm tra lại quyền truy cập hoặc Endpoint trên Swagger</small>
+    </div>`;
+  }
+}
+
+function appendMsgToUI(content, isMe, time) {
+  const box = document.getElementById("chatBoxContent");
+  if (!box) return;
+
+  const div = document.createElement("div");
+  div.className = `msg-row ${isMe ? 'msg-admin' : 'msg-user'}`;
+  div.innerHTML = `
+    <div class="bubble ${isMe ? 'bubble-admin' : 'bubble-user'}">${content}</div>
+    <small style="font-size:10px; color:#aaa; margin-top:3px">${time}</small>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendChat() {
+  const inp = document.getElementById("chatMsg");
+  const txt = inp.value.trim();
+
+  if (!currentChatUserId || !txt) return;
+
+  if (!wsAdmin || wsAdmin.readyState !== WebSocket.OPEN) {
+    showToast("Mất kết nối WebSocket! Đang thử kết nối lại...", true);
+    connectAdminWS();
+    return;
+  }
+
+  try {
+    const payload = {
+      to: currentChatUserId,
+      content: txt
+    };
+    wsAdmin.send(JSON.stringify(payload));
+
+    await callAPI("/chat/", "POST", {
+      content: txt,
+      receiver_id: currentChatUserId
+    });
+
+    appendMsgToUI(txt, true, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+    inp.value = "";
+    inp.focus();
+  } catch (e) {
+    console.error("Lỗi khi gửi tin:", e);
+  }
+}
+</script>
+
+</body>
+</html>
